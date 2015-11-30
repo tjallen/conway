@@ -1,0 +1,18 @@
+@charset "utf-8";
+
+@import "bourbon";
+@import "neat";
+
+body {
+	font-family: Arial, sans-serif;
+	color : #212121;
+	background-color: #E0E0E0;
+}
+
+.wrapper {
+	@include outer-container;
+}
+
+div#alpha {
+	@include span-columns(12);
+}
