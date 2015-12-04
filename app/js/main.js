@@ -1,3 +1,10 @@
+/* todo:
+more DRYing up
+link board size, cell size and # properly
+styles
+xXxxXxtra features: colors, rules
+*/
+
 // game obj data
 var Game = {
 	stats: {
@@ -8,10 +15,17 @@ var Game = {
 		dead: '#F5F5F5',
 		gridlines: '#EEEEEE',
 		alive: '#263238'
+	},
+	events: {
+		dragging: false,
+		passedCellX: 0,
+		passedCellY: 0
 	}
 };
 
 // DOM cache
+var $canvas = $('#game');
+
 var $start = $('#start');
 var $stop = $('#stop');
 var $onestep = $('#onestep');
@@ -186,9 +200,9 @@ var Cell = {
 };
 
 // random 0-1 function if needed for init / debug
-function randomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+// function randomInt(min, max) {
+//   return Math.floor(Math.random() * (max - min + 1)) + min;
+// }
 
 // kill all cells, re-render
 function clearBoard(cb) {
@@ -210,19 +224,42 @@ canvas.width = Grid.width * 10; // ->gameobj
 canvas.height = Grid.height * 10;
 var ctx = canvas.getContext('2d');
 
-// change cell on click
-canvas.addEventListener("click", function(event){
-	// get corrected X/Y coords of click event
+// cell events
+$canvas.mousedown(function() {
+	Game.events.dragging = true;
 	var targX = Math.floor(((event.clientX + window.scrollX) - canvas.offsetLeft) / 10);
 	var targY = Math.floor(((event.clientY + window.scrollY) - canvas.offsetTop) / 10);
-	// if alive, change to dead & vice versa
 	var c = Grid.findCell(targX, targY);
+	Game.events.passedCellX = c.x;
+	Game.events.passedCellY = c.y;
 	if (c.alive) {
 		Cell.change(targX, targY, 0);
 	} else {
 		Cell.change(targX, targY, 1);
 	}
 	Grid.render();
+})
+.mouseup(function() {
+	Game.events.dragging = false;
+})
+.mousemove(function() {
+	if (Game.events.dragging === false) return;
+	var targX = Math.floor(((event.clientX + window.scrollX) - canvas.offsetLeft) / 10);
+	var targY = Math.floor(((event.clientY + window.scrollY) - canvas.offsetTop) / 10);
+	var c = Grid.findCell(targX, targY);
+	if ((c.x !== Game.events.passedCellX || c.y !== Game.events.passedCellY)) {
+		if (c.alive) {
+			Cell.change(targX, targY, 0);
+			Grid.render();
+		} else {
+			Cell.change(targX, targY, 1);
+			Grid.render();
+		}
+		Game.events.passedCellX = c.x;
+		Game.events.passedCellY = c.y;
+	}
+	// console.log("moving through " + Game.events.passedCellX + '-' + Game.events.passedCellY);
+	// console.log( c.x + "-" + c.y);
 });
 
 // debug info on rightclick
@@ -248,10 +285,10 @@ var Shapes = {
 		[13, 8]
 	],
 	tumbler : [
-	[0,3], [0,4], [0,5], [1,0], [1,1], [1,5], [2,0], [2,1], [2,2], [2,3], [2,4], [4,0], [4,1], [4,2], [4,3], [4,4], [5,0], [5,1], [5,5], [6,3], [6,4], [6,5]
+		[0,3], [0,4], [0,5], [1,0], [1,1], [1,5], [2,0], [2,1], [2,2], [2,3], [2,4], [4,0], [4,1], [4,2], [4,3], [4,4], [5,0], [5,1], [5,5], [6,3], [6,4], [6,5]
 	],
 	ten : [
-	[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[9,0],
+		[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[9,0],
 	]
 };
 

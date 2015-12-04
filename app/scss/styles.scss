@@ -16,3 +16,12 @@ body {
 div#alpha {
 	@include span-columns(12);
 }
+
+canvas {
+	cursor: default;
+}
+
+button[disabled], html input[disabled] {
+	cursor: not-allowed;
+	color: grey;
+}
