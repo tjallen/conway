@@ -5,10 +5,16 @@
 @import "neat";
 @import "../../node_modules/material-colors/dist/colors.scss";
 
+$primary-dark: #455a64;
+$primary: #607d8b;
+$accent: #ff5252;
+$body: #212121;
+
 body {
 	font-family: Arial, sans-serif;
-	color : #212121;
+	color : $body;
 	background-color: #E0E0E0;
+	margin: 20px;
 }
 
 .wrapper {
@@ -25,5 +31,40 @@ canvas {
 
 button[disabled], html input[disabled] {
 	cursor: not-allowed;
-	color: grey;
+}
+
+div#controls {
+	margin: 20px;
+	border: 1px solid grey;
+	width: 50%;
+}
+
+button {
+	border: none;
+	padding: 10px;
+	background-color: $accent;
+	color: #fff;
+}
+
+div.btn-group {
+	button {
+		display: inline-block;
+		position: relative;
+		margin-left: -5px;
+	}
+	button.selected {
+		background-color: darken($accent,5%);
+		&:after {
+		//border-bottom: 5px solid
+		height: 3px;
+		width: 100%;
+		display: block;
+		content: " ";
+		bottom: 0;
+		left: 0;
+		position: absolute;
+		//background: lighten($accent,15%);
+		background-color: yellow;
+		}
+	}
 }

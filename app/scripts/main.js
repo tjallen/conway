@@ -1,5 +1,5 @@
 /* todo:
-more DRYing up
+more DRYing up - buttons n button handlers first then game logic
 link board size, cell size and # properly
 styles
 xXxxXxtra features: colors, rules
@@ -57,12 +57,16 @@ var buttonHandler = (function() {
 	function Start() {
 		autoStep = setInterval(intCB, 150);
 		$start.attr("disabled", "disabled");
+		$start.addClass("selected");
 		$stop.removeAttr("disabled", "disabled");
+		$stop.removeClass("selected");
 	}
 	function Stop() {
 		clearInterval(autoStep);
 		$stop.attr("disabled", "disabled");
+		$stop.addClass("selected");
 		$start.removeAttr("disabled", "disabled");
+		$start.removeClass("selected");
 	}
 	function intCB() {
 		Grid.step(Grid.render);
@@ -336,4 +340,5 @@ function addShape(pattern, cb) {
 	clearBoard();
 	addShape(Shapes.glidergun, Grid.render);
 	$glidergun.attr("disabled","disabled");
+	buttonHandler.Stop();
 })();
