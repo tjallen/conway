@@ -20,6 +20,10 @@ var Game = {
 		dragging: false,
 		passedCellX: 0,
 		passedCellY: 0
+	},
+	board: {
+		cellW: 10,
+		cellH: 10
 	}
 };
 
@@ -151,8 +155,8 @@ var Grid = {
 			 var cellY = (((Math.floor(cell.y)) / 10) * 100);
 			 ctx.strokeStyle = Game.styles.gridlines;
 			 ctx.lineWidth = 1;
-			 ctx.fillRect(cellX, cellY, 10, 10);
-			 ctx.strokeRect(cellX, cellY, 10, 10);
+			 ctx.fillRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
+			 ctx.strokeRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
 		});
 	}
 };
