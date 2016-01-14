@@ -35,14 +35,14 @@ var $canvas = $('#game'),
 var canvas = document.getElementById('game');
 canvas.width = Game.board.cols * Game.board.cellW;
 canvas.height = Game.board.rows * Game.board.cellH;
-var ctx = canvas.getContext('2d');
+var $ctx = $canvas[0].getContext('2d');
 
 // controls click handlers
 $start.on('click', function() {
-  buttonHandler.Start();
+  buttonHandler.startGenerationProgress();
 });
 $stop.on('click', function() {
-  buttonHandler.Stop();
+  buttonHandler.stopGenerationProgress();
 });
 
 $onestep.on('click', function() {
@@ -51,14 +51,14 @@ $onestep.on('click', function() {
 
 var buttonHandler = (function() {
   var autoStep;
-  function Start() {
+  function startGenerationProgress() {
     autoStep = setInterval(intCB, 150);
     $start.attr('disabled', 'disabled');
     $start.addClass('selected');
     $stop.removeAttr('disabled', 'disabled');
     $stop.removeClass('selected');
   }
-  function Stop() {
+  function stopGenerationProgress() {
     clearInterval(autoStep);
     $stop.attr('disabled', 'disabled');
     $stop.addClass('selected');
@@ -69,8 +69,8 @@ var buttonHandler = (function() {
     Grid.step(Grid.render);
   }
   return {
-    Start: Start,
-    Stop: Stop
+    startGenerationProgress: startGenerationProgress,
+    stopGenerationProgress: stopGenerationProgress
   };
 })();
 
@@ -80,9 +80,11 @@ var Grid = {
   // switch out array to new states
   newGeneration: function() {
     var oldBoys = Grid.cells;
-    var newBoys = [];
-    Grid.cells.forEach( function ( cell ) {
-      var nextState = cell.alive;
+    var newGenCells = [];
+    Grid.cells.forEach( function (cell) {
+      // will the cell live or die next generation
+      var nextState;
+      // check the cell's neighbours and define nextState below
       var n = Grid.neighboursAlive(cell.x, cell.y);
       // starved/lonely :(
       if ((cell.alive === 1) && (n < 2)) {
@@ -98,16 +100,17 @@ var Grid = {
         nextState = cell.alive;
         // age++?
       }
-      newBoys.push(Cell.create(cell.x,cell.y,nextState));
+      newGenCells.push(Cell.create(cell.x,cell.y,nextState));
     });
-    return newBoys;
+    return newGenCells;
   },
   // step one generation further
   step: function(cb) {
+    // increment counter
     Game.stats.generation++;
     $gencounter.html(Game.stats.generation);
-    var newGen = Grid.newGeneration();
-    Grid.cells = newGen;
+    // send the new generation of cells to the grid
+    Grid.cells = Grid.newGeneration();
     if (cb && typeof(cb) === 'function') {
       cb();
     }
@@ -142,53 +145,42 @@ var Grid = {
     }
     return nbzAlive;
   },
-  // re-render each cell in the grid based on state
+  // re-render every cell in the grid based on state
   render: function() {
     var cellsRendered = 0;
-    function randomColor() {
-      function c() {
-        return Math.floor(Math.random()*256).toString(16);
-      }
-      return '#'+c()+c()+c();
-    }
-    Grid.cells.forEach( function ( cell ) {
+    Grid.cells.forEach( function (cell) {
       cellsRendered++;
       if (cell.alive) {
-        ctx.fillStyle = Cell.styles.alive;
+        $ctx.fillStyle = Cell.styles.alive;
       } else {
-        ctx.fillStyle = Cell.styles.dead;
+        $ctx.fillStyle = Cell.styles.dead;
       }
        var cellX = (((Math.floor(cell.x)) / 10) * 100);
        var cellY = (((Math.floor(cell.y)) / 10) * 100);
-       ctx.strokeStyle = '#EEEEEE';
-       //ctx.lineWidth = 0;
-       ctx.fillRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
-       ctx.strokeRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
+       $ctx.strokeStyle = '#EEEEEE';
+       //$ctx.lineWidth = 0;
+       $ctx.fillRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
+       $ctx.strokeRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
     });
     console.log(cellsRendered + ' cells rendered by Grid.render()');
   },
+  // render only certain cells
   renderTheseCells: function() {
     var theseCellsRendered = 0;
-/*    function randomColor() {
-      function c() {
-        return Math.floor(Math.random()*256).toString(16);
-      }
-      return '#'+c()+c()+c();
-    }*/
     // render an array of cells only eg during drag
-    passedCellArray.forEach( function ( cell ) {
+    passedCellArray.forEach( function (cell) {
       theseCellsRendered++;
       if (cell.alive) {
-        ctx.fillStyle = Cell.styles.alive;
+        $ctx.fillStyle = Cell.styles.alive;
       } else {
-        ctx.fillStyle = Cell.styles.dead;
+        $ctx.fillStyle = Cell.styles.dead;
       }
        var cellX = (((Math.floor(cell.x)) / 10) * 100);
        var cellY = (((Math.floor(cell.y)) / 10) * 100);
-       ctx.strokeStyle = '#EEEEEE';
-       //ctx.lineWidth = 0;
-       ctx.fillRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
-       ctx.strokeRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
+       $ctx.strokeStyle = '#EEEEEE';
+       //$ctx.lineWidth = 0;
+       $ctx.fillRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
+       $ctx.strokeRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
     });
     console.log(theseCellsRendered + ' cells rendered by Grid.renderTheseCells()');
   }
@@ -211,7 +203,7 @@ var Cell = {
     newCell.neighbours = 0;
     return newCell;
   },
-  // change state of cell 0->1 or 1->0
+  // change state of cell dead->alive or alive->dead
   change: function(x, y, action) {
     var c = Grid.findCell(x, y);
     if (action === 0) {
@@ -221,6 +213,7 @@ var Cell = {
       c.alive = 1;
     }
   },
+  // coords
   x: 0,
   y: 0,
   // change to states['alive','dead'] prob
@@ -238,11 +231,6 @@ var Cell = {
     ],
   //age: 0,
 };
-
-// random 0-1 function if needed for init / debug
-// function randomInt(min, max) {
-//   return Math.floor(Math.random() * (max - min + 1)) + min;
-// }
 
 // kill all cells, re-render
 function clearBoard(cb) {
@@ -376,5 +364,5 @@ function addShape(pattern, cb) {
   addShape(Shapes.glidergun, Grid.render);
   $glidergun.attr('disabled','disabled');
   $glidergun.addClass('selected');
-  buttonHandler.Stop();
+  buttonHandler.stopGenerationProgress();
 })();
