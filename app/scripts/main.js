@@ -1,5 +1,4 @@
 // game data obj
-
 var Game = {
   stats: {
     generation: 0
@@ -19,17 +18,18 @@ var Game = {
 };
 
 // DOM cache
+// game canvas
 var $canvas = $('#game'),
 // buttons
     $start = $('#start'),
     $stop = $('#stop'),
     $onestep = $('#onestep'),
-    $gencounter = $("#gencounter"),
+    $gencounter = $('#gencounter'),
 // shapes
-    $tumbler = $("#tumbler"),
-    $glider = $("#glider"),
-    $glidergun = $("#glidergun"),
-    $ten = $("#ten");
+    $tumbler = $('#tumbler'),
+    $glider = $('#glider'),
+    $glidergun = $('#glidergun'),
+    $ten = $('#ten');
 
 // canvas dommerino
 var canvas = document.getElementById('game');
@@ -53,17 +53,17 @@ var buttonHandler = (function() {
   var autoStep;
   function Start() {
     autoStep = setInterval(intCB, 150);
-    $start.attr("disabled", "disabled");
-    $start.addClass("selected");
-    $stop.removeAttr("disabled", "disabled");
-    $stop.removeClass("selected");
+    $start.attr('disabled', 'disabled');
+    $start.addClass('selected');
+    $stop.removeAttr('disabled', 'disabled');
+    $stop.removeClass('selected');
   }
   function Stop() {
     clearInterval(autoStep);
-    $stop.attr("disabled", "disabled");
-    $stop.addClass("selected");
-    $start.removeAttr("disabled", "disabled");
-    $start.removeClass("selected");
+    $stop.attr('disabled', 'disabled');
+    $stop.addClass('selected');
+    $start.removeAttr('disabled', 'disabled');
+    $start.removeClass('selected');
   }
   function intCB() {
     Grid.step(Grid.render);
@@ -108,7 +108,7 @@ var Grid = {
     $gencounter.html(Game.stats.generation);
     var newGen = Grid.newGeneration();
     Grid.cells = newGen;
-    if (cb && typeof(cb) === "function") {
+    if (cb && typeof(cb) === 'function') {
       cb();
     }
   },
@@ -149,7 +149,7 @@ var Grid = {
       function c() {
         return Math.floor(Math.random()*256).toString(16);
       }
-      return "#"+c()+c()+c();
+      return '#'+c()+c()+c();
     }
     Grid.cells.forEach( function ( cell ) {
       cellsRendered++;
@@ -165,7 +165,7 @@ var Grid = {
        ctx.fillRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
        ctx.strokeRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
     });
-    console.log(cellsRendered + " cells rendered by Grid.render()");
+    console.log(cellsRendered + ' cells rendered by Grid.render()');
   },
   renderTheseCells: function() {
     var theseCellsRendered = 0;
@@ -173,7 +173,7 @@ var Grid = {
       function c() {
         return Math.floor(Math.random()*256).toString(16);
       }
-      return "#"+c()+c()+c();
+      return '#'+c()+c()+c();
     }*/
     // render an array of cells only eg during drag
     passedCellArray.forEach( function ( cell ) {
@@ -190,7 +190,7 @@ var Grid = {
        ctx.fillRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
        ctx.strokeRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
     });
-    console.log(theseCellsRendered + " cells rendered by Grid.renderTheseCells()");
+    console.log(theseCellsRendered + ' cells rendered by Grid.renderTheseCells()');
   }
 
 };
@@ -253,7 +253,7 @@ function clearBoard(cb) {
       Grid.cells.push(Cell.create(x,y,0));
     }
   }
-  if (cb && typeof(cb) === "function") {
+  if (cb && typeof(cb) === 'function') {
     cb();
   }
 }
@@ -294,8 +294,8 @@ $canvas.mousedown(function() {
     Game.events.passedCellY = c.y;
     console.log(passedCellArray);
   }
-  // console.log("moving through " + Game.events.passedCellX + '-' + Game.events.passedCellY);
-  // console.log( c.x + "-" + c.y);
+  // console.log('moving through ' + Game.events.passedCellX + '-' + Game.events.passedCellY);
+  // console.log( c.x + '-' + c.y);
 });
 // prevent weird behaviour when dragged outside window
 $(window).mouseup(function() {
@@ -304,9 +304,9 @@ $(window).mouseup(function() {
 });
 
 // debug info on rightclick
-canvas.addEventListener("contextmenu", function(event){
+canvas.addEventListener('contextmenu', function(event){
   event.preventDefault();
-  //console.log("nbz: " + Grid.neighboursAlive(targX, targY));
+  //console.log('nbz: ' + Grid.neighboursAlive(targX, targY));
   //console.log(Grid.findCell(targX, targY));
 });
 
@@ -335,10 +335,10 @@ var Shapes = {
 
 // shapes click handlers (req DRY de-shite-ening, add into button module etc)
 $('.shapes button').on('click', function() {
-  $(this).attr("disabled","disabled");
-  $(this).siblings().removeAttr("disabled","disabled");
-  $(this).addClass("selected");
-  $(this).siblings().removeClass("selected");
+  $(this).attr('disabled','disabled');
+  $(this).siblings().removeAttr('disabled','disabled');
+  $(this).addClass('selected');
+  $(this).siblings().removeClass('selected');
   clearBoard();
 });
 
@@ -365,7 +365,7 @@ function addShape(pattern, cb) {
   for (var i = 0; i < initShape.length; i++) {
     Cell.change((initShape[i][0] + xOffset),(initShape[i][1] + yOffset), 1);
   }
-  if (cb && typeof(cb) === "function") {
+  if (cb && typeof(cb) === 'function') {
        cb();
    }
 }
@@ -374,7 +374,7 @@ function addShape(pattern, cb) {
 (function()  {
   clearBoard();
   addShape(Shapes.glidergun, Grid.render);
-  $glidergun.attr("disabled","disabled");
-  $glidergun.addClass("selected");
+  $glidergun.attr('disabled','disabled');
+  $glidergun.addClass('selected');
   buttonHandler.Stop();
 })();
