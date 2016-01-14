@@ -27,6 +27,7 @@ div#alpha {
 
 canvas {
 	cursor: default;
+	border: 2px solid $md-grey-600;
 }
 
 button[disabled], html input[disabled] {
@@ -41,7 +42,7 @@ div#controls {
 
 button {
 	border: none;
-	padding: 10px;
+	padding: 15px 20px;
 	background-color: $accent;
 	color: #fff;
 }
@@ -50,7 +51,14 @@ div.btn-group {
 	button {
 		display: inline-block;
 		position: relative;
-		margin-left: -5px;
+		float: left;
+		text-transform: uppercase;
+		font-weight: bold;
+		font-size: 13px;
+		&.solo {
+			margin-left: 10px;
+			margin-right: 10px;
+		}
 	}
 	button.selected {
 		background-color: darken($accent,5%);

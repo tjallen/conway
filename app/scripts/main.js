@@ -1,44 +1,41 @@
-/* todo:
-more DRYing up - buttons n button handlers first then game logic
-link board size, cell size and # properly
-styles
-xXxxXxtra features: colors, rules
-*/
+// game data obj
 
-// game obj data
 var Game = {
 	stats: {
 		generation: 0
 	},
 	rules: {},
-	styles: {
-		dead: '#F5F5F5',
-		gridlines: '#EEEEEE',
-		alive: '#263238'
-	},
 	events: {
 		dragging: false,
 		passedCellX: 0,
 		passedCellY: 0
 	},
 	board: {
+		cols: 80,
+		rows: 50,
 		cellW: 10,
 		cellH: 10
 	}
 };
 
 // DOM cache
-var $canvas = $('#game');
+var $canvas = $('#game'),
+// buttons
+    $start = $('#start'),
+    $stop = $('#stop'),
+    $onestep = $('#onestep'),
+    $gencounter = $("#gencounter"),
+// shapes
+    $tumbler = $("#tumbler"),
+    $glider = $("#glider"),
+    $glidergun = $("#glidergun"),
+    $ten = $("#ten");
 
-var $start = $('#start');
-var $stop = $('#stop');
-var $onestep = $('#onestep');
-var $gencounter = $("#gencounter");
-
-var $tumbler = $("#tumbler");
-var $glider = $("#glider");
-var $glidergun = $("#glidergun");
-var $ten = $("#ten");
+// canvas dommerino
+var canvas = document.getElementById('game');
+canvas.width = Game.board.cols * Game.board.cellW;
+canvas.height = Game.board.rows * Game.board.cellH;
+var ctx = canvas.getContext('2d');
 
 // controls click handlers
 $start.on('click', function() {
@@ -79,8 +76,6 @@ var buttonHandler = (function() {
 
 // gridderino
 var Grid = {
-	width: 100,
-	height: 50,
 	cells: [],
 	// switch out array to new states
 	newGeneration: function() {
@@ -120,9 +115,9 @@ var Grid = {
 	// retrieve cell at coords from Grid.cells array
 	findCell: function(x, y) {
 		// simulate toroidal array wrapping
-		x = (this.width + x) % this.width;
-		y = (this.height + y) % this.height;
-		var theCell = Grid.cells[Grid.width * y + x];
+		x = (Game.board.cols + x) % Game.board.cols;
+		y = (Game.board.rows + y) % Game.board.rows;
+		var theCell = Grid.cells[Game.board.cols * y + x];
 		if (theCell !== undefined) {
 			return theCell;
 		}
@@ -149,26 +144,63 @@ var Grid = {
 	},
 	// re-render each cell in the grid based on state
 	render: function() {
+		var cellsRendered = 0;
+		function randomColor() {
+		  function c() {
+		    return Math.floor(Math.random()*256).toString(16);
+		  }
+		  return "#"+c()+c()+c();
+		}
 		Grid.cells.forEach( function ( cell ) {
+			cellsRendered++;
 			if (cell.alive) {
-				ctx.fillStyle = Game.styles.alive;
+				ctx.fillStyle = Cell.styles.alive;
 			} else {
-				ctx.fillStyle = Game.styles.dead;
+				ctx.fillStyle = Cell.styles.dead;
 			}
 			 var cellX = (((Math.floor(cell.x)) / 10) * 100);
 			 var cellY = (((Math.floor(cell.y)) / 10) * 100);
-			 ctx.strokeStyle = Game.styles.gridlines;
-			 ctx.lineWidth = 1;
+			 ctx.strokeStyle = '#EEEEEE';
+			 //ctx.lineWidth = 0;
 			 ctx.fillRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
 			 ctx.strokeRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
 		});
+		console.log(cellsRendered + " cells rendered by Grid.render()");
+	},
+	renderTheseCells: function() {
+		var theseCellsRendered = 0;
+/*		function randomColor() {
+			function c() {
+				return Math.floor(Math.random()*256).toString(16);
+			}
+			return "#"+c()+c()+c();
+		}*/
+		// render an array of cells only eg during drag
+		passedCellArray.forEach( function ( cell ) {
+			theseCellsRendered++;
+			if (cell.alive) {
+				ctx.fillStyle = Cell.styles.alive;
+			} else {
+				ctx.fillStyle = Cell.styles.dead;
+			}
+			 var cellX = (((Math.floor(cell.x)) / 10) * 100);
+			 var cellY = (((Math.floor(cell.y)) / 10) * 100);
+			 ctx.strokeStyle = '#EEEEEE';
+			 //ctx.lineWidth = 0;
+			 ctx.fillRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
+			 ctx.strokeRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
+		});
+		console.log(theseCellsRendered + " cells rendered by Grid.renderTheseCells()");
 	}
-};
 
-var grid = Object.create(Grid);
+};
 
 // cellerino
 var Cell = {
+	styles: {
+		dead: '#F5F5F5',
+		alive: '#263238'
+	},
 	create: function(x, y, state) {
 		var newCell = Object.create(this);
 		newCell.x = x;
@@ -216,8 +248,8 @@ var Cell = {
 function clearBoard(cb) {
 	Grid.cells = [];
 	Game.stats.generation = 0;
-	for (y = 0; y < Grid.height; y++) {
-		for (x = 0; x < Grid.width; x++) {
+	for (y = 0; y < Game.board.rows; y++) {
+		for (x = 0; x < Game.board.cols; x++) {
 			Grid.cells.push(Cell.create(x,y,0));
 		}
 	}
@@ -225,13 +257,7 @@ function clearBoard(cb) {
 		cb();
 	}
 }
-
-// canvas dommerino
-var canvas = document.getElementById('game');
-canvas.width = Grid.width * 10; // ->gameobj
-canvas.height = Grid.height * 10;
-var ctx = canvas.getContext('2d');
-
+var passedCellArray = [];
 // cell events
 $canvas.mousedown(function() {
 	Game.events.dragging = true;
@@ -256,18 +282,25 @@ $canvas.mousedown(function() {
 	var targY = Math.floor(((event.clientY + window.scrollY) - canvas.offsetTop) / 10);
 	var c = Grid.findCell(targX, targY);
 	if ((c.x !== Game.events.passedCellX || c.y !== Game.events.passedCellY)) {
+		passedCellArray.push(c);
 		if (c.alive) {
 			Cell.change(targX, targY, 0);
-			Grid.render();
+			Grid.renderTheseCells();
 		} else {
 			Cell.change(targX, targY, 1);
-			Grid.render();
+			Grid.renderTheseCells();
 		}
 		Game.events.passedCellX = c.x;
 		Game.events.passedCellY = c.y;
+		console.log(passedCellArray);
 	}
 	// console.log("moving through " + Game.events.passedCellX + '-' + Game.events.passedCellY);
 	// console.log( c.x + "-" + c.y);
+});
+// prevent weird behaviour when dragged outside window
+$(window).mouseup(function() {
+	Game.events.dragging = false;
+	passedCellArray = [];
 });
 
 // debug info on rightclick
@@ -304,6 +337,8 @@ var Shapes = {
 $('.shapes button').on('click', function() {
 	$(this).attr("disabled","disabled");
 	$(this).siblings().removeAttr("disabled","disabled");
+	$(this).addClass("selected");
+	$(this).siblings().removeClass("selected");
 	clearBoard();
 });
 
@@ -325,8 +360,8 @@ $glidergun.on('click', function() {
 
 function addShape(pattern, cb) {
 	var initShape = pattern || [];
-	var xOffset = Grid.width / 2;
-	var yOffset = Grid.height / 2;
+	var xOffset = Game.board.cols / 2;
+	var yOffset = Game.board.rows / 2;
 	for (var i = 0; i < initShape.length; i++) {
 		Cell.change((initShape[i][0] + xOffset),(initShape[i][1] + yOffset), 1);
 	}
@@ -340,5 +375,6 @@ function addShape(pattern, cb) {
 	clearBoard();
 	addShape(Shapes.glidergun, Grid.render);
 	$glidergun.attr("disabled","disabled");
+	$glidergun.addClass("selected");
 	buttonHandler.Stop();
 })();
