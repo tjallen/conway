@@ -67,6 +67,7 @@ var buttonHandler = (function() {
   }
   function intCB() {
     Grid.step(Grid.render);
+    
   }
   return {
     startGenerationProgress: startGenerationProgress,
