@@ -1,5 +1,7 @@
-#yet another conway's game of life
+# it's yet another conway's game of life!
 
-to do:
-- de-spaghettify
-- work on something else instead
+Get hype! It's 2015's hottest Messing Around With JavaScript side project!
+
+Warning: old and smelly
+
+[Case study on my portfolio site](http://thomjamesallen.com/game-of-life/)
