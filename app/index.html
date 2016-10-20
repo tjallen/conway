@@ -1,77 +1,80 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title></title>
-		<meta name="description" content="">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-		<!-- inject:css -->
-		<link rel="stylesheet" href="styles/styles.css">
-		<!-- endinject -->
-	</head>
+    <!-- inject:css -->
+    <link rel="stylesheet" href="styles/styles.css">
+    <!-- endinject -->
+  </head>
 
-	<body>
-	<header></header>
+  <body>
+  <header></header>
 
-	<main>
+  <main>
 
-		<p>Draw shapes on the canvas to create living cells or select from preset patterns below, then click start to progress through generations</p>
+    <p>Draw shapes on the canvas to create living cells or select from preset patterns below, then click start to progress through generations</p>
 
-		<canvas id="game">
-		</canvas>
+    <canvas id="game">
+    </canvas>
 
-		<br>
+    <br>
 
-		<h2>Generation:<span  id="gencounter">0</span></h2>
+    <h2>Generation:<span  id="gencounter">0</span></h2>
 
-		<div id="controls">
-		<h3>Controls</h3>
-		<div class="btn-group">
-			<button id="start" class="toggle">
-				Start
-			</button>
-			<button id="stop" class="toggle">
-				Stop
-			</button>
-			<button id="onestep" class="solo">
-				+1 step
-			</button>
-		</div>
-		<br>
+    <div id="controls">
+    <h3>Controls</h3>
+    <div class="btn-group">
+      <button id="start" class="toggle grouped">
+        Start
+      </button>
+      <button id="stop" class="toggle">
+        Stop
+      </button>
+      <button id="onestep">
+        +1 step
+      </button>
+      <button id="clear">
+        Clear board
+      </button>
+    </div>
+    <br>
 
-		<div class="shapes">
-			<h3>Preset shapes</h3>
-			<div class="btn-group">
-				<button id="glidergun">
-					glidergun
-				</button>
-				<button id="glider">
-					glider
-				</button>
-				<button id="ten">
-					ten
-				</button>
-				<button id="tumbler">
-					tumbler
-				</button>
-			</div>
-		</div>
+    <div class="shapes">
+      <h3>Preset shapes</h3>
+      <div class="btn-group">
+        <button id="glidergun" class="grouped">
+          glidergun
+        </button>
+        <button id="glider" class="grouped">
+          glider
+        </button>
+        <button id="ten" class="grouped">
+          ten
+        </button>
+        <button id="tumbler" class="grouped">
+          tumbler
+        </button>
+      </div>
+    </div>
 
 
 
-		</div>
+    </div>
 
-	</main>
+  </main>
 
-	<footer></footer>
+  <footer></footer>
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 
-		<!--inject:js-->
-		<script src="scripts/main.js"></script>
-		<!--endinject-->
-	</body>
+    <!--inject:js-->
+    <script src="scripts/main.js"></script>
+    <!--endinject-->
+  </body>
 </html>

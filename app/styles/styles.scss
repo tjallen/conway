@@ -11,10 +11,10 @@ $accent: #ff5252;
 $body: #212121;
 
 body {
-	font-family: Arial, sans-serif;
-	color : $body;
-	background-color: #E0E0E0;
-	margin: 20px;
+  font-family: Arial, sans-serif;
+  color : $body;
+  background-color: #E0E0E0;
+  margin: 20px;
 }
 
 h2 {
@@ -29,61 +29,61 @@ h3 {
 }
 
 .wrapper {
-	@include outer-container;
+  @include outer-container;
 }
 
 div#alpha {
-	@include span-columns(12);
+  @include span-columns(12);
 }
 
 canvas {
-	cursor: default;
-	border: 2px solid $md-grey-600;
+  cursor: default;
+  border: 2px solid $md-grey-600;
 }
 
 button[disabled], html input[disabled] {
-	cursor: not-allowed;
+  cursor: not-allowed;
 }
 
 div#controls {
-	margin: 20px;
-	width: 50%;
+  margin: 20px;
 }
 
 button {
-	border: none;
-	padding: 15px 20px;
-	background-color: $accent;
-	color: #fff;
+  border: none;
+  padding: 15px 20px;
+  margin-right: 10px;
+  background-color: $accent;
+  color: #fff;
 }
 
 div.btn-group {
   @include clearfix;
-	button {
-		display: inline-block;
-		position: relative;
-		float: left;
-		text-transform: uppercase;
-		font-weight: bold;
-		font-size: 13px;
-		&.solo {
-			margin-left: 10px;
-			margin-right: 10px;
-		}
-	}
-	button.selected {
-		background-color: darken($accent,5%);
-		&:after {
-		//border-bottom: 5px solid
-		height: 3px;
-		width: 100%;
-		display: block;
-		content: " ";
-		bottom: 0;
-		left: 0;
-		position: absolute;
-		//background: lighten($accent,15%);
-		background-color: yellow;
-		}
-	}
+  button {
+    display: inline-block;
+    position: relative;
+    float: left;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 13px;
+  }
+  button.selected {
+    background-color: darken($accent,5%);
+    &:after {
+    //border-bottom: 5px solid
+    height: 3px;
+    width: 100%;
+    display: block;
+    content: " ";
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    //background: lighten($accent,15%);
+    background-color: yellow;
+    }
+  }
+}
+
+.grouped {
+  margin-right: 0;
 }

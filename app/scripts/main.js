@@ -25,6 +25,7 @@ var $canvas = $('#game'),
     $start = $('#start'),
     $stop = $('#stop'),
     $onestep = $('#onestep'),
+    $clear = $('#clear'),
     $gencounter = $('#gencounter'),
 // shapes
     $tumbler = $('#tumbler'),
@@ -48,6 +49,10 @@ $stop.on('click', function() {
 
 $onestep.on('click', function() {
   Grid.step(Grid.render);
+});
+
+$clear.on('click', function() {
+  clearBoard(Grid.render);
 });
 
 var buttonHandler = (function() {
@@ -218,8 +223,9 @@ var Cell = {
   //age: 0,
 };
 
-// kill all cells, re-render
+// kill all cells
 function clearBoard(cb) {
+  console.log('clearing board');
   Grid.cells = [];
   Game.stats.generation = 0;
   for (y = 0; y < Game.board.rows; y++) {
