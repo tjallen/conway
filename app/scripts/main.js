@@ -5,6 +5,7 @@ var Game = {
   },
   rules: {},
   events: {
+    currentInteractedCells: [],
     dragging: false,
     passedCellX: 0,
     passedCellY: 0
@@ -146,46 +147,30 @@ var Grid = {
     }
     return nbzAlive;
   },
-  // re-render every cell in the grid based on state
-  render: function() {
-    var cellsRendered = 0;
-    Grid.cells.forEach( function (cell) {
-      cellsRendered++;
-      if (cell.alive) {
-        $ctx.fillStyle = Cell.styles.alive;
-      } else {
-        $ctx.fillStyle = Cell.styles.dead;
-      }
-       var cellX = (((Math.floor(cell.x)) / 10) * 100);
-       var cellY = (((Math.floor(cell.y)) / 10) * 100);
-       $ctx.strokeStyle = '#EEEEEE';
-       //$ctx.lineWidth = 0;
-       $ctx.fillRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
-       $ctx.strokeRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
-    });
-    console.log(cellsRendered + ' cells rendered by Grid.render()');
+  // re-render cells
+  // every cell in the grid if no params
+  // if passed an array, just render those specified cells
+  render: function(specifiedCells) {
+    var iterableCells = (specifiedCells ? specifiedCells : Grid.cells);
+    var renderCount = 0;
+    if (Array.isArray(iterableCells)) {
+      iterableCells.forEach( function (cell) {
+        renderCount++;
+        if (cell.alive) {
+          $ctx.fillStyle = Cell.styles.alive;
+        } else {
+          $ctx.fillStyle = Cell.styles.dead;
+        }
+         var cellX = (((Math.floor(cell.x)) / 10) * 100);
+         var cellY = (((Math.floor(cell.y)) / 10) * 100);
+         $ctx.strokeStyle = '#EEEEEE';
+         //$ctx.lineWidth = 0;
+         $ctx.fillRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
+         $ctx.strokeRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
+      });
+    }
+    console.log(renderCount + ' cells rendered by Grid.render()');
   },
-  // render only certain cells
-  renderTheseCells: function() {
-    var theseCellsRendered = 0;
-    // render an array of cells only eg during drag
-    passedCellArray.forEach( function (cell) {
-      theseCellsRendered++;
-      if (cell.alive) {
-        $ctx.fillStyle = Cell.styles.alive;
-      } else {
-        $ctx.fillStyle = Cell.styles.dead;
-      }
-       var cellX = (((Math.floor(cell.x)) / 10) * 100);
-       var cellY = (((Math.floor(cell.y)) / 10) * 100);
-       $ctx.strokeStyle = '#EEEEEE';
-       //$ctx.lineWidth = 0;
-       $ctx.fillRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
-       $ctx.strokeRect(cellX, cellY, Game.board.cellW, Game.board.cellH);
-    });
-    console.log(theseCellsRendered + ' cells rendered by Grid.renderTheseCells()');
-  }
-
 };
 
 // cellerino
@@ -246,21 +231,24 @@ function clearBoard(cb) {
     cb();
   }
 }
-var passedCellArray = [];
+
 // cell events
 $canvas.mousedown(function() {
   Game.events.dragging = true;
   var targX = Math.floor(((event.clientX + window.scrollX) - canvas.offsetLeft) / 10);
   var targY = Math.floor(((event.clientY + window.scrollY) - canvas.offsetTop) / 10);
   var c = Grid.findCell(targX, targY);
+  Game.events.currentInteractedCells.push(c);
+  console.log(c);
   Game.events.passedCellX = c.x;
   Game.events.passedCellY = c.y;
   if (c.alive) {
     Cell.change(targX, targY, 0);
+    Grid.render(Game.events.currentInteractedCells);
   } else {
     Cell.change(targX, targY, 1);
+    Grid.render(Game.events.currentInteractedCells);
   }
-  Grid.render();
 })
 .mouseup(function() {
   Game.events.dragging = false;
@@ -271,17 +259,17 @@ $canvas.mousedown(function() {
   var targY = Math.floor(((event.clientY + window.scrollY) - canvas.offsetTop) / 10);
   var c = Grid.findCell(targX, targY);
   if ((c.x !== Game.events.passedCellX || c.y !== Game.events.passedCellY)) {
-    passedCellArray.push(c);
+    Game.events.currentInteractedCells.push(c);
     if (c.alive) {
       Cell.change(targX, targY, 0);
-      Grid.renderTheseCells();
+      Grid.render(Game.events.currentInteractedCells);
     } else {
       Cell.change(targX, targY, 1);
-      Grid.renderTheseCells();
+      Grid.render(Game.events.currentInteractedCells);
     }
     Game.events.passedCellX = c.x;
     Game.events.passedCellY = c.y;
-    console.log(passedCellArray);
+    console.log(Game.events.currentInteractedCells);
   }
   // console.log('moving through ' + Game.events.passedCellX + '-' + Game.events.passedCellY);
   // console.log( c.x + '-' + c.y);
@@ -289,7 +277,7 @@ $canvas.mousedown(function() {
 // prevent weird behaviour when dragged outside window
 $(window).mouseup(function() {
   Game.events.dragging = false;
-  passedCellArray = [];
+  Game.events.currentInteractedCells = [];
 });
 
 // debug info on rightclick
