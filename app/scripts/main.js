@@ -220,7 +220,6 @@ var Cell = {
     [this.x-1, this.y+1],
     [this.x-1, this.y]
     ],
-  //age: 0,
 };
 
 // kill all cells
@@ -245,7 +244,6 @@ $canvas.mousedown(function() {
   var targY = Math.floor(((event.clientY + window.scrollY) - canvas.offsetTop) / 10);
   var c = Grid.findCell(targX, targY);
   Game.events.currentInteractedCells.push(c);
-  console.log(c);
   Game.events.passedCellX = c.x;
   Game.events.passedCellY = c.y;
   if (c.alive) {
@@ -275,10 +273,7 @@ $canvas.mousedown(function() {
     }
     Game.events.passedCellX = c.x;
     Game.events.passedCellY = c.y;
-    console.log(Game.events.currentInteractedCells);
   }
-  // console.log('moving through ' + Game.events.passedCellX + '-' + Game.events.passedCellY);
-  // console.log( c.x + '-' + c.y);
 });
 // prevent weird behaviour when dragged outside window
 $(window).mouseup(function() {
@@ -295,10 +290,10 @@ canvas.addEventListener('contextmenu', function(event){
 
 // preset shapes
 var Shapes = {
-  glider : [
+  glider: [
     [2,1],[3,2],[3,3],[2,3],[1,3]
   ],
-  glidergun : [
+  glidergun: [
     [24, 0], [22, 1], [24, 1], [12, 2], [13, 2],
     [20, 2], [21, 2], [34, 2], [35, 2], [11, 3],
     [15, 3], [20, 3], [21, 3], [34, 3], [35, 3],
@@ -308,10 +303,10 @@ var Shapes = {
     [16, 6], [24, 6], [11, 7], [15, 7], [12, 8],
     [13, 8]
   ],
-  tumbler : [
+  tumbler: [
     [0,3], [0,4], [0,5], [1,0], [1,1], [1,5], [2,0], [2,1], [2,2], [2,3], [2,4], [4,0], [4,1], [4,2], [4,3], [4,4], [5,0], [5,1], [5,5], [6,3], [6,4], [6,5]
   ],
-  ten : [
+  ten: [
     [0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[9,0],
   ]
 };
@@ -349,8 +344,8 @@ function addShape(pattern, cb) {
     Cell.change((initShape[i][0] + xOffset),(initShape[i][1] + yOffset), 1);
   }
   if (cb && typeof(cb) === 'function') {
-       cb();
-   }
+    cb();
+  }
 }
 
 // call initial state
