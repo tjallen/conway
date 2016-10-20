@@ -17,6 +17,17 @@ body {
 	margin: 20px;
 }
 
+h2 {
+  text-align: center;
+}
+
+h3 {
+  color: #565656;
+  width: 100%;
+  clear: both;
+  display: block;
+}
+
 .wrapper {
 	@include outer-container;
 }
@@ -36,7 +47,6 @@ button[disabled], html input[disabled] {
 
 div#controls {
 	margin: 20px;
-	border: 1px solid grey;
 	width: 50%;
 }
 
@@ -48,6 +58,7 @@ button {
 }
 
 div.btn-group {
+  @include clearfix;
 	button {
 		display: inline-block;
 		position: relative;
