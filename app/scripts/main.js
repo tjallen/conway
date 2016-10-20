@@ -94,17 +94,17 @@ var Grid = {
       // check the cell's neighbours and define nextState below
       var n = Grid.neighboursAlive(cell.x, cell.y);
       // starved/lonely :(
-      if ((cell.alive === 1) && (n < 2)) {
+      if ((cell.status === 1) && (n < 2)) {
         nextState = 0;
       // overpop
-      } else if ((cell.alive === 1) && (n > 3)) {
+    } else if ((cell.status === 1) && (n > 3)) {
         nextState = 0;
       // reproduction
-      } else if ((cell.alive === 0) && (n === 3)) {
+    } else if ((cell.status === 0) && (n === 3)) {
         nextState = 1;
       // nothing / stasis
       } else {
-        nextState = cell.alive;
+        nextState = cell.status;
         // age++?
       }
       newGenCells.push(Cell.create(cell.x,cell.y,nextState));
@@ -146,7 +146,7 @@ var Grid = {
     ];
     var nbzAlive = 0;
     for (i = 0; i < nbz.length; i++) {
-      if ((nbz[i] !== undefined) && (nbz[i].alive === 1)) {
+      if ((nbz[i] !== undefined) && (nbz[i].status === 1)) {
         nbzAlive++;
       }
     }
@@ -161,7 +161,7 @@ var Grid = {
     if (Array.isArray(iterableCells)) {
       iterableCells.forEach( function (cell) {
         renderCount++;
-        if (cell.alive) {
+        if (cell.status) {
           $ctx.fillStyle = Cell.styles.alive;
         } else {
           $ctx.fillStyle = Cell.styles.dead;
@@ -189,7 +189,7 @@ var Cell = {
     newCell.x = x;
     newCell.y = y;
     //newCell.age = 0;
-    newCell.alive = state;
+    newCell.status = state;
     newCell.nextState = undefined;
     newCell.neighbours = 0;
     return newCell;
@@ -198,17 +198,17 @@ var Cell = {
   change: function(x, y, action) {
     var c = Grid.findCell(x, y);
     if (action === 0) {
-      c.alive = 0;
+      c.status = 0;
     }
     if (action === 1) {
-      c.alive = 1;
+      c.status = 1;
     }
   },
   // coords
   x: 0,
   y: 0,
-  // change to states['alive','dead'] prob
-  alive: 0,
+  // change this yo
+  status: 0,
   //neighbours: 0,
   possibleNeighbours: [
     [this.x-1, this.y-1],
@@ -284,8 +284,8 @@ $(window).mouseup(function() {
 // debug info on rightclick
 canvas.addEventListener('contextmenu', function(event){
   event.preventDefault();
-  //console.log('nbz: ' + Grid.neighboursAlive(targX, targY));
-  //console.log(Grid.findCell(targX, targY));
+  console.log('nbz: ' + Grid.neighboursAlive(targX, targY));
+  console.log(Grid.findCell(targX, targY));
 });
 
 // preset shapes
