@@ -60,6 +60,7 @@ button {
 div.btn-group {
   @include clearfix;
   button {
+    color: #ab1818;
     display: inline-block;
     position: relative;
     float: left;
@@ -68,9 +69,8 @@ div.btn-group {
     font-size: 13px;
   }
   button.selected {
-    background-color: lighten($accent,5%);
+    color: #fff;;
     &:after {
-    //border-bottom: 5px solid
     height: 3px;
     width: 100%;
     display: block;
@@ -78,7 +78,6 @@ div.btn-group {
     bottom: 0;
     left: 0;
     position: absolute;
-    //background: lighten($accent,15%);
     background-color: yellow;
     }
   }
