@@ -158,12 +158,17 @@ var Grid = {
     }
     return nbzAlive;
   },
+  // cell stats methods
   getLivingCellCount: function() {
     var count = 0;
     Grid.cells.forEach( function(cell) {
       if (cell.status === 1) count++;
     });
     return count;
+  },
+  updateStats: function() {
+    $genCounter.html(Game.stats.generation);
+    $cellCounter.html(Game.stats.livingCells);
   },
   // re-render cells
   // every cell in the grid if no params
@@ -188,6 +193,7 @@ var Grid = {
       });
     }
     console.log(renderCount + ' cells rendered by Grid.render()');
+    Grid.updateStats();
   },
 };
 
@@ -368,12 +374,6 @@ function addShape(pattern, cb) {
   if (cb && typeof(cb) === 'function') {
     cb();
   }
-  updateStats();
-}
-
-function updateStats() {
-  $genCounter.html(Game.stats.generation);
-  $cellCounter.html(Game.stats.livingCells);
 }
 
 // call initial state
@@ -382,6 +382,5 @@ function updateStats() {
   addShape(Shapes.glidergun, Grid.render);
   $glidergun.attr('disabled','disabled');
   $glidergun.addClass('selected');
-  updateStats();
   buttonHandler.stopGenerationProgress();
 })();
