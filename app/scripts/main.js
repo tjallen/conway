@@ -8,7 +8,9 @@ var Game = {
     currentInteractedCells: [],
     dragging: false,
     passedCellX: 0,
-    passedCellY: 0
+    passedCellY: 0,
+    lastEventX: null,
+    lastEventY: null
   },
   board: {
     cols: 80,
@@ -207,7 +209,7 @@ var Cell = {
   // coords
   x: 0,
   y: 0,
-  // change this yo
+  // change this yo. 0 => 'DEAD', 1 => 'ALIVE'?
   status: 0,
   //neighbours: 0,
   possibleNeighbours: [
@@ -238,42 +240,47 @@ function clearBoard(cb) {
 }
 
 // cell events
-$canvas.mousedown(function() {
-  Game.events.dragging = true;
-  var targX = Math.floor(((event.clientX + window.scrollX) - canvas.offsetLeft) / 10);
-  var targY = Math.floor(((event.clientY + window.scrollY) - canvas.offsetTop) / 10);
-  var c = Grid.findCell(targX, targY);
-  Game.events.currentInteractedCells.push(c);
-  Game.events.passedCellX = c.x;
-  Game.events.passedCellY = c.y;
-  if (c.alive) {
-    Cell.change(targX, targY, 0);
+// merge this later
+function invertCellState(c) {
+  console.log('invertCellState', c);
+  if (c.status === 1) {
+    Cell.change(Game.events.targX, Game.events.targY, 0);
     Grid.render(Game.events.currentInteractedCells);
   } else {
-    Cell.change(targX, targY, 1);
+    Cell.change(Game.events.targX, Game.events.targY, 1);
     Grid.render(Game.events.currentInteractedCells);
   }
+}
+
+function cellInteract(event) {
+  console.log('cellInteract', event.type);
+  var targX = Math.floor(((event.clientX + window.scrollX) - canvas.offsetLeft) / 10);
+  var targY = Math.floor(((event.clientY + window.scrollY) - canvas.offsetTop) / 10);
+  Game.events.targX = targX;
+  Game.events.targY = targY;;
+  var c = Grid.findCell(Game.events.targX, Game.events.targY);
+  if (event.type === 'mousedown') {
+    Game.events.currentInteractedCells.push(c);
+    invertCellState(c);
+  }
+  if ((event.type === 'mousemove') && (c.x !== Game.events.passedCellX || c.y !== Game.events.passedCellY )) {
+    Game.events.currentInteractedCells.push(c);
+    invertCellState(c);  
+  }
+  Game.events.passedCellX = c.x;
+  Game.events.passedCellY = c.y;
+}
+
+$canvas.mousedown(function() {
+  cellInteract(event);
+  Game.events.dragging = true;
 })
 .mouseup(function() {
   Game.events.dragging = false;
 })
 .mousemove(function() {
   if (Game.events.dragging === false) return;
-  var targX = Math.floor(((event.clientX + window.scrollX) - canvas.offsetLeft) / 10);
-  var targY = Math.floor(((event.clientY + window.scrollY) - canvas.offsetTop) / 10);
-  var c = Grid.findCell(targX, targY);
-  if ((c.x !== Game.events.passedCellX || c.y !== Game.events.passedCellY)) {
-    Game.events.currentInteractedCells.push(c);
-    if (c.alive) {
-      Cell.change(targX, targY, 0);
-      Grid.render(Game.events.currentInteractedCells);
-    } else {
-      Cell.change(targX, targY, 1);
-      Grid.render(Game.events.currentInteractedCells);
-    }
-    Game.events.passedCellX = c.x;
-    Game.events.passedCellY = c.y;
-  }
+  cellInteract(event);
 });
 // prevent weird behaviour when dragged outside window
 $(window).mouseup(function() {
@@ -284,6 +291,8 @@ $(window).mouseup(function() {
 // debug info on rightclick
 canvas.addEventListener('contextmenu', function(event){
   event.preventDefault();
+  var targX = Math.floor(((event.clientX + window.scrollX) - canvas.offsetLeft) / 10);
+  var targY = Math.floor(((event.clientY + window.scrollY) - canvas.offsetTop) / 10);
   console.log('nbz: ' + Grid.neighboursAlive(targX, targY));
   console.log(Grid.findCell(targX, targY));
 });
