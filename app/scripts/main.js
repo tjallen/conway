@@ -121,7 +121,6 @@ var Grid = {
   step: function(cb) {
     // increment counter
     Game.stats.generation++;
-    updateStats();
     // send the new generation of cells to the grid
     Grid.cells = Grid.newGeneration();
     if (cb && typeof(cb) === 'function') {
