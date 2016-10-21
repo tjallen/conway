@@ -1,21 +1,21 @@
 {
-  "name": "frontenv",
+  "name": "tja-gameoflife",
   "version": "1.0.0",
-  "description": "tja frontend build system",
+  "description": "tja-gameoflife",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tjallen/frontenv.git"
+    "url": "git+https://github.com/tjallen/conway.git"
   },
   "author": "thomjamesallen.com",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/tjallen/frontenv/issues"
+    "url": "https://github.com/tjallen/conway/issues"
   },
-  "homepage": "https://github.com/tjallen/frontenv#readme",
+  "homepage": "https://github.com/tjallen/conway#readme",
   "devDependencies": {
     "browser-sync": "^2.10.0",
     "del": "^2.1.0",

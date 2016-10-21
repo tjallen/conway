@@ -253,6 +253,7 @@ function invertCellState(c) {
 }
 
 function cellInteract(event) {
+  // if (event.type === 'mousedown' && event.button !== 0) return;
   console.log('cellInteract', event.type);
   var targX = Math.floor(((event.clientX + window.scrollX) - canvas.offsetLeft) / 10);
   var targY = Math.floor(((event.clientY + window.scrollY) - canvas.offsetTop) / 10);
@@ -272,6 +273,7 @@ function cellInteract(event) {
 }
 
 $canvas.mousedown(function() {
+  if (event.button !== 0) return;
   cellInteract(event);
   Game.events.dragging = true;
 })
@@ -293,6 +295,7 @@ canvas.addEventListener('contextmenu', function(event){
   event.preventDefault();
   var targX = Math.floor(((event.clientX + window.scrollX) - canvas.offsetLeft) / 10);
   var targY = Math.floor(((event.clientY + window.scrollY) - canvas.offsetTop) / 10);
+  console.log('========== debug =========');
   console.log('nbz: ' + Grid.neighboursAlive(targX, targY));
   console.log(Grid.findCell(targX, targY));
 });
