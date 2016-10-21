@@ -17,56 +17,59 @@
   <header></header>
 
   <main>
+    
+    <h1>yet another conway's game of life</h1>
 
     <p>Draw shapes on the canvas to create living cells or select from preset patterns below, then click start to progress through generations</p>
+    
+    <p>
+      <a href="https://github.com/tjallen/conway" title="Github repo">Github repo</a>
+    </p>
+    
+    <div class="board-wrap">
+      <div id="controls">
+        <h3 class="controls-label">Controls</h3>
+        <div class="btn-group">
+          <button id="start" class="toggle grouped">
+            Start
+          </button>
+          <button id="stop" class="toggle">
+            Stop
+          </button>
+          <button id="onestep">
+            +1 step
+          </button>
+          <button id="clear">
+            Clear board
+          </button>
+        </div>
 
-    <canvas id="game">
-    </canvas>
+        <div class="shapes">
+          <h3 class="controls-label">Preset shapes</h3>
+          <div class="btn-group">
+            <button id="glidergun" class="grouped">
+              glidergun
+            </button>
+            <button id="glider" class="grouped">
+              glider
+            </button>
+            <button id="ten" class="grouped">
+              ten
+            </button>
+            <button id="tumbler" class="grouped">
+              tumbler
+            </button>
+          </div>
+        </div>
+      </div>
 
-    <br>
+      <canvas id="game">
+      </canvas>
+      
+    </div>
 
     <h2 class="stats stats-generation">Generation:&nbsp;<span  id="gencounter"></span></h2>
     <h2 class="stats stats-living">Living cells:&nbsp;<span id="cellcounter"></span></h2>
-
-    <div id="controls">
-    <h3>Controls</h3>
-    <div class="btn-group">
-      <button id="start" class="toggle grouped">
-        Start
-      </button>
-      <button id="stop" class="toggle">
-        Stop
-      </button>
-      <button id="onestep">
-        +1 step
-      </button>
-      <button id="clear">
-        Clear board
-      </button>
-    </div>
-    <br>
-
-    <div class="shapes">
-      <h3>Preset shapes</h3>
-      <div class="btn-group">
-        <button id="glidergun" class="grouped">
-          glidergun
-        </button>
-        <button id="glider" class="grouped">
-          glider
-        </button>
-        <button id="ten" class="grouped">
-          ten
-        </button>
-        <button id="tumbler" class="grouped">
-          tumbler
-        </button>
-      </div>
-    </div>
-
-
-
-    </div>
 
   </main>
 

@@ -17,11 +17,15 @@ body {
   margin: 20px;
 }
 
+.board-wrap {
+  position: relative;
+}
+
 h2.stats {
   margin: 20px 0 5px 20px;
   text-transform: uppercase;
   letter-spacing: -1px;
-  $.stats-gen {
+  &.stats-gen {
     font-size: 22px;
   }
   &.stats-living {
@@ -36,17 +40,8 @@ h3 {
   display: block;
 }
 
-.wrapper {
-  @include outer-container;
-}
-
-div#alpha {
-  @include span-columns(12);
-}
-
 canvas {
   cursor: default;
-  border: 2px solid $md-grey-600;
 }
 
 button[disabled], html input[disabled] {
@@ -54,15 +49,23 @@ button[disabled], html input[disabled] {
 }
 
 div#controls {
-  margin: 20px;
+  position: absolute;
+  top: 0;
+  left: 10px;
 }
 
 button {
   border: none;
-  padding: 15px 20px;
+  padding: 5px 10px;
   margin-right: 10px;
   background-color: $accent;
   color: #fff;
+}
+
+.controls-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  margin-bottom: 1px;
 }
 
 div.btn-group {
