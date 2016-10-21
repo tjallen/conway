@@ -190,10 +190,9 @@ var Cell = {
     var newCell = Object.create(this);
     newCell.x = x;
     newCell.y = y;
-    //newCell.age = 0;
     newCell.status = state;
     newCell.nextState = undefined;
-    newCell.neighbours = 0;
+    // newCell.neighbours = 0;
     return newCell;
   },
   // change state of cell dead->alive or alive->dead
