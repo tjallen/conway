@@ -1,7 +1,10 @@
 // game data obj
 var Game = {
   stats: {
-    generation: 0
+    generation: 0,
+    get livingCells() {
+      return Grid.getLivingCellCount()
+    }
   },
   rules: {},
   events: {
@@ -28,7 +31,8 @@ var $canvas = $('#game'),
     $stop = $('#stop'),
     $onestep = $('#onestep'),
     $clear = $('#clear'),
-    $gencounter = $('#gencounter'),
+    $genCounter = $('#gencounter'),
+    $cellCounter = $('#cellcounter'),
 // shapes
     $tumbler = $('#tumbler'),
     $glider = $('#glider'),
@@ -117,7 +121,7 @@ var Grid = {
   step: function(cb) {
     // increment counter
     Game.stats.generation++;
-    $gencounter.html(Game.stats.generation);
+    updateStats();
     // send the new generation of cells to the grid
     Grid.cells = Grid.newGeneration();
     if (cb && typeof(cb) === 'function') {
@@ -153,6 +157,13 @@ var Grid = {
       }
     }
     return nbzAlive;
+  },
+  getLivingCellCount: function() {
+    var count = 0;
+    Grid.cells.forEach( function(cell) {
+      if (cell.status === 1) count++;
+    });
+    return count;
   },
   // re-render cells
   // every cell in the grid if no params
@@ -357,6 +368,12 @@ function addShape(pattern, cb) {
   if (cb && typeof(cb) === 'function') {
     cb();
   }
+  updateStats();
+}
+
+function updateStats() {
+  $genCounter.html(Game.stats.generation);
+  $cellCounter.html(Game.stats.livingCells);
 }
 
 // call initial state
@@ -365,5 +382,6 @@ function addShape(pattern, cb) {
   addShape(Shapes.glidergun, Grid.render);
   $glidergun.attr('disabled','disabled');
   $glidergun.addClass('selected');
+  updateStats();
   buttonHandler.stopGenerationProgress();
 })();

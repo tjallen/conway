@@ -17,8 +17,16 @@ body {
   margin: 20px;
 }
 
-h2 {
-  text-align: center;
+h2.stats {
+  margin: 20px 0 5px 20px;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  $.stats-gen {
+    font-size: 22px;
+  }
+  &.stats-living {
+    font-size: 16px;
+  }
 }
 
 h3 {
