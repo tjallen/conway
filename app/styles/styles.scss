@@ -68,7 +68,7 @@ div.btn-group {
     font-size: 13px;
   }
   button.selected {
-    background-color: darken($accent,5%);
+    background-color: lighten($accent,5%);
     &:after {
     //border-bottom: 5px solid
     height: 3px;
