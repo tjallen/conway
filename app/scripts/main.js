@@ -58,6 +58,7 @@ $onestep.on('click', function() {
 });
 
 $clear.on('click', function() {
+  buttonHandler.stopGenerationProgress();
   clearBoard(Grid.render);
 });
 

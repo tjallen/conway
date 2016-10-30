@@ -18,7 +18,7 @@ body {
 }
 
 .board-wrap {
-  position: relative;
+  @include clearfix;
 }
 
 h2.stats {
@@ -48,21 +48,29 @@ button[disabled], html input[disabled] {
   cursor: not-allowed;
 }
 
+div.intro {
+  margin-bottom: 30px;
+  @include clearfix;
+}
+
 div#controls {
-  position: absolute;
-  top: 0;
-  left: 10px;
+  width: 800px;
+  background-color: $accent;
+  position: relative;
+  height: 31px;
 }
 
 button {
   border: none;
-  padding: 5px 10px;
+  padding: 8px 10px;
   margin-right: 10px;
   background-color: $accent;
   color: #fff;
 }
 
 .controls-label {
+  position: absolute;
+  top: -25px;
   font-size: 10px;
   text-transform: uppercase;
   margin-bottom: 1px;
@@ -70,6 +78,8 @@ button {
 
 div.btn-group {
   @include clearfix;
+  display: inline-block;
+  float: left;
   button {
     color: #ab1818;
     display: inline-block;
@@ -80,7 +90,8 @@ div.btn-group {
     font-size: 13px;
   }
   button.selected {
-    color: #fff;;
+    color: #fff;
+    background-color: lighten($accent, 3%);
     &:after {
     height: 3px;
     width: 100%;
